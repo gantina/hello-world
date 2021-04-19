@@ -9,3 +9,4 @@
 <h2> Wow!!! Ansible is really good </h2>
 <h2> Learning Kubernetes </h2>
 <h2> Learning CI/CD Kubernetes </h2>
+<h2> Woooohooo!!! Completed the Devops Training </h2>
