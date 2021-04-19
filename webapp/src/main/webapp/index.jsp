@@ -7,3 +7,5 @@
 <h2> Lets learn Ansible </h2>
 <h2> Lets learn how to integrate Jenkins and Ansible </h2>
 <h2> Wow!!! Ansible is really good </h2>
+<h2> Learning Kubernetes </h2>
+<h2> Learning CI/CD Kubernetes </h2>
