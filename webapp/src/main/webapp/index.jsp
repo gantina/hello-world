@@ -10,3 +10,4 @@
 <h2> Learning Kubernetes </h2>
 <h2> Learning CI/CD Kubernetes </h2>
 <h2> Woooohooo!!! Completed the Devops Training </h2>
+<h2> It is nice to learn new things </h2>
