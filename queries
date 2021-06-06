@@ -1,0 +1,118 @@
+Drop Table ADDRESS;
+Drop Table PERSON;
+
+
+Create Table PERSON (
+	Person_id INT NOT NULL PRIMARY KEY,
+	FIRST_NAME nvarchar(100) NULL,
+	Preferred_first_name nvarchar(100) NULL,
+	Last_name nvarchar(100) NOT NULL,
+	Date_of_birth Date,
+	Hire_date Date NULL,
+	Occupation nvarchar(1)
+	);
+
+Create Table ADDRESS (
+	Address_id INT NOT NULL PRIMARY KEY,
+	Person_id INT NOT NULL FOREIGN KEY REFERENCES Person(Person_ID),
+	Address_type nvarchar(10) NOT NULL,
+	street_line_1 nvarchar(100),
+	city nvarchar(100),
+	state nvarchar(100),
+	zip_code nvarchar(30)
+	);
+
+--Insert scripts for the table Person
+Insert into PERSON (Person_id, FIRST_NAME, Preferred_first_name, Last_name, Date_of_birth, Hire_date, Occupation)
+Values (1, 'Ananth', 'Venkata', 'Ganti', '04-17-1977', '03-08-2021', 'Y');
+Insert into PERSON (Person_id, FIRST_NAME, Preferred_first_name, Last_name, Date_of_birth, Hire_date, Occupation)
+Values (2, 'Bhavani', 'Bujji', 'Namala', '02-12-1979', '03-08-2019', 'Y');
+Insert into PERSON (Person_id, FIRST_NAME, Preferred_first_name, Last_name, Date_of_birth, Hire_date, Occupation)
+Values (3, 'Naresh', '', 'Ganti', '09-03-1979', '03-08-2017', 'Y');
+Insert into PERSON (Person_id, FIRST_NAME, Preferred_first_name, Last_name, Date_of_birth, Hire_date, Occupation)
+Values (4, '', 'Aruna', 'Mantha', '02-01-1987', '05-08-2021', 'N');
+Insert into PERSON (Person_id, FIRST_NAME, Preferred_first_name, Last_name, Date_of_birth, Hire_date, Occupation)
+Values (5, 'Laasya', 'Medha', 'Ganti', '09-26-2010', '05-08-2021', NULL);
+
+--Insert scripts for the table Address
+Insert into Address (Address_id, Person_id, Address_type, street_line_1, city, state, zip_code)
+Values (1, 1, 'BILL', '123 Test Street', 'Stratford', 'CT', '06900');
+Insert into Address (Address_id, Person_id, Address_type, street_line_1, city, state, zip_code)
+Values (2, 2, 'Home', '456 Test Street', 'Stamford', 'CT', '06901');
+Insert into Address (Address_id, Person_id, Address_type, street_line_1, city, state, zip_code)
+Values (3, 3, 'Home', '789 Berry CT', 'Edison', 'NJ', '06902');
+Insert into Address (Address_id, Person_id, Address_type, street_line_1, city, state, zip_code)
+Values (4, 4, 'BILL', '1011 Berry CT', 'Edison', 'NJ', '06903');
+Insert into Address (Address_id, Person_id, Address_type, street_line_1, city, state, zip_code)
+Values (5, 5, '', '1213 Street', 'Stamford', 'CT', '06903');
+
+
+--Question 1
+Select * From PERSON;
+Select * From ADDRESS;
+
+Select 
+p.person_id,
+Case When ISNULL(p.preferred_first_name, '') = ''
+	Then p.First_name
+	When p.preferred_first_name is not null
+	Then p.preferred_first_name
+	Else p.first_name
+End As REPORTING_NAME
+, p.Last_name
+, p.date_of_birth
+, p.hire_date
+, p.occupation
+From Person P;
+
+--Question 2
+Select * From Person p where p.Occupation is null;
+
+--Question 3
+Select * from Person p where p.Date_of_birth < '08-07-1990';
+
+--Question 4
+Select p.*, Datediff(day, p.hire_date, getdate()) as No_of_days from Person p where Datediff(day, p.hire_date, getdate()) <= 100;
+
+--Question 5
+Select p.*, a.Address_type from Person p
+Inner Join Address a
+On p.Person_id = a.Person_id
+Where a.Address_type = 'Home';
+
+--Question 6
+Select p.*, 
+CASE when a.Address_type = 'BILL'
+     Then a.address_type 
+	 Else 'NONE' 
+END As Address_type 
+from Person p
+Left Join Address a
+On p.Person_id = a.Person_id;
+
+
+---Question 7
+
+SELECT a.Address_Type, COUNT(*) as Count_of_Address_Type FROM address a
+group by a.address_type
+Order By a.Address_Type DESC;
+
+
+---Question 8
+SELECT p.Last_Name, p.First_name, P.Preferred_first_name,  
+CASE When Address_type = 'HOME' 
+	 Then CONCAT(a.street_line_1,',',a.city,',', a.state, ',', a.zip_code)
+END AS Home_address,
+CASE When Address_type = 'BILL' 
+	 Then CONCAT(a.street_line_1,',',a.city,',', a.state, ',', a.zip_code)
+END AS Billing_address
+--, a.Address_type
+from Person p
+Inner Join Address a
+on p.Person_id = a.person_id;
+
+
+--Question 9
+Update person SET occupation = 'X' from person p, address a
+where p.person_id = a.person_id and a.address_type = 'BILL';
+
